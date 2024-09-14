@@ -26,3 +26,21 @@ const vectorize_querry = (async () => {
     console.log(embed);
 });
   
+const embed_docs = async (documents: string[]) => {
+  const res = await cohere.embed({
+    texts: documents,
+    model: 'embed-english-v3.0',
+    inputType: 'search_document'
+  })
+
+  return res
+}
+
+const embed_search = async (search: string) => {
+  const res = await cohere.embed({
+    texts: [search],
+    model: 'embed-english-v3.0',
+    inputType: 'search_query',
+  })
+  return res
+}
