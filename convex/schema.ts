@@ -9,6 +9,7 @@ export default defineSchema({
   people: defineTable({
     name: v.string(),
     notes: v.string(),
+    connected_to: v.array(v.string()),
     vector: v.array(v.float64()),
     }).vectorIndex("by_vector", {
       vectorField: "vector",
