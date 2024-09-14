@@ -33,7 +33,7 @@ export const embed_doc = async (document: string ) => {
   })
   
 
-
+  
   return res.embeddings[0]
 }
 
@@ -43,6 +43,6 @@ export const embed_search = async (search: string) => {
     model: 'embed-english-v3.0',
     inputType: 'search_query',
   })
-  console.log(res)
+  console.log(`embeded search gave me ${res.embeddings}`)
   return res.embeddings[0]
 }

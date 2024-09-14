@@ -120,15 +120,18 @@ export const similarPeopleSearch = action({
   },
   handler: async (ctx, args) => {
     const vector = await embed_search(args.searchQuery);
+    console.log(`vector is ${vector}`)
     const results = await ctx.vectorSearch("peopleEmbedding", "by_embedding", {
       vector: vector,
-      limit: 16,
+      limit: 4,
     })
+    
     console.log(results)
     const people: Array<Doc<"people">> = await ctx.runQuery(
       internal.people.fetchResults,
-      { ids: results.map((result) => result._id) },
+      { ids: results.filter(result => result._score >= 0.25).map((result) => result._id) },
     );
+    console.log(`people is ${people}`)
     return people
   }
 })
