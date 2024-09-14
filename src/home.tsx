@@ -4,16 +4,13 @@ import TypingButton from "./typingButton"; // Import TypingButton component
 const Home: React.FC = () => {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#150429]">
-      {/* Video Background */}
-      <video
-        autoPlay
-        loop
-        muted
-        className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
-      >
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+
+      {/* Half Transparent Centered Image */}
+      <img
+        src="/icon.PNG" // Using the image from the public folder
+        alt="Centered Icon"
+        className="absolute w-1/2 h-auto opacity-50 z-[-1] mx-auto my-auto top-0 bottom-0 left-0 right-0"
+      />
 
       {/* Main content */}
       <main className="text-center mt-20 z-10">

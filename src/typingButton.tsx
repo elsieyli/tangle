@@ -24,7 +24,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
-      <button className="text-center px-6 py-3 text-lg font-medium text-white bg-black rounded-md hover:bg-white hover:text-black transition-colors">
+      <button className="text-center px-6 py-3 text-lg font-medium text-white bg-black/75 rounded-md hover:bg-white/75 hover:text-black transition-colors">
         {displayedText || " "} {/* Show typed text or a space initially */}
       </button>
     </div>
