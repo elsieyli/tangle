@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global font for the body */
+body {
+  @apply font-mono;
+}
+
+/* Adding background image blur */
+.main-background {
+  background-image: url('/path-to-your-image.jpg'); /* Add your image here */
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px); /* Adjust the blur strength */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
