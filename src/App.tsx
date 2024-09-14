@@ -1,6 +1,5 @@
 import React from "react";
 import Home from "./home";
-import "./App.css";
 
 const App: React.FC = () => {
   return (
@@ -11,4 +10,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-

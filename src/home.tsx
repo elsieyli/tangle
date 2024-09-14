@@ -1,29 +1,76 @@
-import React from "react";
+import React from 'react';
 
-// This is the main component for the page
 const Home: React.FC = () => {
   return (
-    <div style={styles.container}>
-      {/* Top section */}
-      <header style={styles.header}>
-        <div style={styles.searchBar}></div>
-        <h1 style={styles.title}>welcome</h1>
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
+      >
+        {/* Placeholder video URL */}
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* Navbar */}
+      <header className="w-full py-4 bg-blue-600 text-white shadow-md fixed top-0 left-0 z-10">
+        <nav className="container mx-auto flex justify-between items-center px-4">
+          {/* Search bar on the left */}
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="px-3 py-1 text-black rounded-md focus:outline-none"
+            />
+          </div>
+
+          {/* Center: Title */}
+          <h1 className="text-2xl font-semibold">welcome</h1>
+
+          {/* Right: Dropdown */}
+          <div className="relative inline-block text-left">
+            <button className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-800 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+              Options
+            </button>
+            {/* Dropdown options */}
+            <div className="absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <div className="py-1">
+                <a href="#action" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Profile
+                </a>
+                <a href="#action" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Settings
+                </a>
+                <a href="#action" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Logout
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
       </header>
 
-      {/* Middle Section with Tangle Title */}
-      <main style={styles.main}>
-        <h1 style={styles.tangleTitle}>Tangle</h1>
-        <p style={styles.subtitle}>connect the north</p>
+      {/* Main content */}
+      <main className="text-center mt-20 z-10">
+        <h1 className="text-6xl font-cursive text-blue-700">Tangle</h1>
+        <p className="text-xl text-gray-700 mt-4">connect the north</p>
 
         {/* Buttons */}
-        <div style={styles.buttonContainer}>
-          <button style={styles.button}>Start now</button>
-          <p style={styles.loginText}>or <a href="/login">login</a></p>
+        <div className="mt-10">
+          <button className="px-6 py-3 text-lg font-medium text-white bg-green-500 rounded-md hover:bg-green-600 transition-colors">
+            Start now
+          </button>
+          <p className="mt-4 text-lg">
+            or <a href="/login" className="underline text-blue-500 hover:text-blue-700">login</a>
+          </p>
         </div>
       </main>
 
-      {/* Organizer and Dash labels (optional, for context) */}
-      <div style={styles.labels}>
+      {/* Organizer Dash (bottom right) */}
+      <div className="absolute bottom-5 right-5 text-gray-500">
         <p>organizer dash</p>
       </div>
     </div>
@@ -31,64 +78,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-
-// Inline styles for the page
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column" as "column",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100vh",
-    fontFamily: "'Courier New', monospace",
-    backgroundColor: "#fff",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    width: "100%",
-    padding: "10px 20px",
-    boxSizing: "border-box" as "border-box",
-  },
-  searchBar: {
-    width: "200px",
-    height: "30px",
-    border: "1px solid black",
-  },
-  title: {
-    fontSize: "24px",
-    textAlign: "center" as "center",
-  },
-  main: {
-    textAlign: "center" as "center",
-    marginTop: "50px",
-  },
-  tangleTitle: {
-    fontSize: "64px",
-    fontFamily: "'Dancing Script', cursive",
-    margin: "0",
-    padding: "0",
-  },
-  subtitle: {
-    fontSize: "18px",
-    marginTop: "10px",
-  },
-  buttonContainer: {
-    marginTop: "30px",
-  },
-  button: {
-    padding: "10px 20px",
-    fontSize: "16px",
-    border: "1px solid black",
-    backgroundColor: "white",
-    cursor: "pointer",
-  },
-  loginText: {
-    marginTop: "20px",
-  },
-  labels: {
-    position: "absolute" as "absolute",
-    top: "10px",
-    right: "10px",
-  },
-};
