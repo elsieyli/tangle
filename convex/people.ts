@@ -3,6 +3,8 @@ import { query, action, internalQuery, mutation, internalAction, internalMutatio
 import { v } from "convex/values";
 import {internal} from "./_generated/api"
 
+import {embed_doc, embed_search} from "./cohere"
+
 
 export const get = query({
   args: {},
@@ -40,7 +42,7 @@ export const insert = mutation({
 export const generateAndAddEmbedding = internalAction({
   args: { personId: v.id("people"), notes: v.string() },
   handler: async (ctx, args) => {
-    const embedding = await embed_docs([args.notes]);
+    const embedding = await embed_doc(args.notes);
     await ctx.runMutation(internal.people.addEmbedding, {
       personId: args.personId,
       embedding,
@@ -122,6 +124,7 @@ export const similarPeopleSearch = action({
       vector: vector,
       limit: 16,
     })
+    console.log(results)
     const people: Array<Doc<"people">> = await ctx.runQuery(
       internal.people.fetchResults,
       { ids: results.map((result) => result._id) },

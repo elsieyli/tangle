@@ -1,7 +1,6 @@
 const { CohereClient } = require('cohere-ai');
 
 
-require('dotenv').config()
 
 const cohere = new CohereClient({
   token: process.env.cohere_API_Key,
@@ -17,7 +16,7 @@ const vectorize_note = (async () => {
 });
 
 
-const vectorize_querry = (async () => {
+ const vectorize_querry = (async () => {
     const embed = await cohere.embed({
       texts: ['hello', 'goodbye'],
       model: 'embed-english-v3.0',
@@ -26,21 +25,24 @@ const vectorize_querry = (async () => {
     console.log(embed);
 });
   
-const embed_docs = async (documents: string[]) => {
+export const embed_doc = async (document: string ) => {
   const res = await cohere.embed({
-    texts: documents,
+    texts: [document],
     model: 'embed-english-v3.0',
     inputType: 'search_document'
   })
+  
 
-  return res
+
+  return res.embeddings[0]
 }
 
-const embed_search = async (search: string) => {
+export const embed_search = async (search: string) => {
   const res = await cohere.embed({
     texts: [search],
     model: 'embed-english-v3.0',
     inputType: 'search_query',
   })
-  return res
+  console.log(res)
+  return res.embeddings[0]
 }
