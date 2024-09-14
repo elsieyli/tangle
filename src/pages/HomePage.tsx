@@ -1,5 +1,5 @@
 import React from "react"
-import TypingButton from "../typingButton" // Import TypingButton component
+import TypingButton from "../components/TypingButton" // Import TypingButton component
 import { Link } from "react-router-dom"
 
 const HomePage: React.FC = () => {
