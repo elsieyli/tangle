@@ -9,7 +9,11 @@ export default defineSchema({
   people: defineTable({
     name: v.string(),
     notes: v.string(),
-
+    vector: v.array(v.float64()),
+    }).vectorIndex("by_vector", {
+      vectorField: "vector",
+      dimensions: 356,
+      // filterFields: [""]
     })
 });
 
