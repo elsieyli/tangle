@@ -3,10 +3,10 @@ import { useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 
 function App() {
-  const tasks = useQuery(api.tasks.get);
+  const people = useQuery(api.people.get);
   return (
     <div className="App">
-      {tasks?.map(({ _id, text }) => <div key={_id}>{text}</div>)}
+      {people?.map(({_id,  name, notes }) => <div key={_id}>{name} - {notes}</div>)}
     </div>
   );
 }
