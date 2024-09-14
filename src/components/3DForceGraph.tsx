@@ -13,7 +13,9 @@ interface GraphNode extends NodeObject {
 
 const CustomForceGraph3D = () => {
   const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const graphRef = useRef<any>(null)
+//   const rotationRef = useRef(0)
 
   // Function to convert 3D coordinates to 2D screen coordinates
   const convert3DTo2D = (node: GraphNode) => {
@@ -42,9 +44,33 @@ const CustomForceGraph3D = () => {
     }
   }, [hoveredNode])
 
+//   // Rotate the graph
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       if (graphRef.current) {
+//         rotationRef.current += 0.005 // Adjust the speed of rotation here
+
+//         // Rotate the camera in a circular orbit around the center of the graph
+//         const distanceFromCenter = 800 // Distance from the center of the graph
+//         const x = distanceFromCenter * Math.sin(rotationRef.current)
+//         const z = distanceFromCenter * Math.cos(rotationRef.current)
+
+//         graphRef.current.cameraPosition(
+//           { x, y: 200, z }, // Orbiting at a fixed height (y: 200)
+//           { x: 0, y: 0, z: 0 }, // Always look at the center of the graph
+//           3000 // Duration of the animation (in ms)
+//         )
+//       }
+//     }, 50) // Controls how smooth the rotation is (higher interval = less smooth)
+
+//     return () => clearInterval(interval) // Clean up on unmount
+//   }, [])
+
   return (
     <>
       <ForceGraph3D
+        height={700}
+        ref={graphRef}
         graphData={gData}
         //   can pass node as parameter below
         nodeThreeObject={() => {
@@ -54,9 +80,10 @@ const CustomForceGraph3D = () => {
           })
           return new THREE.Mesh(geometry, material)
         }}
-        linkWidth={(link) => 1 + (link.value % 5)}
+        linkWidth={(link) => 1 + (link.value % 3)}
         // Link values start at 1, and after they meet they go up
         linkColor={(link) => (link.value > 1 ? "purple" : "gray")}
+        linkOpacity={0.4}
         onNodeDragEnd={(node: GraphNode) => {
           node.fx = node.x
           node.fy = node.y
