@@ -1,10 +1,10 @@
-import React from "react";
-import TypingButton from "./typingButton"; // Import TypingButton component
+import React from "react"
+import TypingButton from "../components/TypingButton" // Import TypingButton component
+import { Link } from "react-router-dom"
 
-const Home: React.FC = () => {
+const HomePage: React.FC = () => {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#150429]">
-
       {/* Half Transparent Centered Image */}
       <img
         src="/icon.PNG" // Using the image from the public folder
@@ -20,11 +20,13 @@ const Home: React.FC = () => {
         {/* Buttons */}
         <div className="mt-10">
           {/* Replace the current button with TypingButton */}
-          <TypingButton />
+          <Link to="/dashboard">
+            <TypingButton />
+          </Link>
         </div>
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default HomePage

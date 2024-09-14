@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Home: React.FC = () => {
+const TypingButton: React.FC = () => {
   const [displayedText, setDisplayedText] = useState<string>(""); // State to store the current text being typed
   const fullText = "Start now"; // The full text to display
   const typingSpeed = 100; // Typing speed in milliseconds
@@ -31,4 +31,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default TypingButton;
