@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { AnimatePresence, motion } from "framer-motion"
@@ -15,7 +16,7 @@ export function PlaceholdersAndVanishInput({
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
 
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const intervalRef = useRef<any>(null)
   const startAnimation = () => {
     intervalRef.current = setInterval(() => {
       setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length)
@@ -70,9 +71,9 @@ export function PlaceholdersAndVanishInput({
     const newData: any[] = []
 
     for (let t = 0; t < 800; t++) {
-      let i = 4 * t * 800
+      const i = 4 * t * 800
       for (let n = 0; n < 800; n++) {
-        let e = i + 4 * n
+        const e = i + 4 * n
         if (
           pixelData[e] !== 0 &&
           pixelData[e + 1] !== 0 &&
