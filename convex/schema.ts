@@ -12,7 +12,7 @@ export default defineSchema({
     vector: v.array(v.float64()),
     }).vectorIndex("by_vector", {
       vectorField: "vector",
-      dimensions: 356,
+      dimensions: 1024,
       // filterFields: [""]
     })
 });
