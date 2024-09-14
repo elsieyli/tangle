@@ -1,8 +1,10 @@
-function App() {
+import CustomForceGraph3D from "./components/3DForceGraph"
+
+const App = () => {
   return (
-    <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-    </>
+    <div className="w-screen h-screen bg-white text-white">
+      <CustomForceGraph3D />
+    </div>
   )
 }
 
