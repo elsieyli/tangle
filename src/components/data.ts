@@ -1,4 +1,28 @@
-export const gData = {
+export interface Link {
+  source: string;
+  target: string;
+  value: number;
+}
+
+export interface Node {
+  id: string;
+  x?: number
+  y?: number
+  z?: number
+}
+
+export interface Link {
+  source: string;
+  target: string;
+  value: number;
+}
+
+export interface GraphData {
+  nodes: Node[];
+  links: Link[];
+}
+
+export const gData: GraphData = {
   nodes: [
     { id: "Myriel" },
     { id: "Napoleon" },
