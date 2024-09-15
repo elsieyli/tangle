@@ -136,7 +136,9 @@ export const connectUserToOthers = internalMutation({
       return
     }
 
-    var newConnected = person?.connected_to!
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+    const newConnected = person?.connected_to!
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     peopleToConnect.forEach(p => newConnected.push(p?._id!))
 
     await ctx.db.patch(args.personId, {connected_to: newConnected})
@@ -185,7 +187,7 @@ export const getEmbedding = internalQuery({
 
   
 })
-export const similarPeopleByEmbeddingId = internalAction({
+export const similarPeopleByEmbeddingId = action({
   args: {
     embeddingId: v.id("peopleEmbedding"), // Argument to accept an embeddingId
   },
