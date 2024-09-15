@@ -10,6 +10,7 @@ import { Doc } from "../../convex/_generated/dataModel"
 const DashboardPage = () => {
   const convex = useConvex()
   const [gData, setGData] = useState<GraphData>()
+  const [highlightedNodeIds, setHighLightedNodes] = useState<string[]>()
   const people = useQuery(api.people.get)
   const addPeopleMutation = useMutation(api.people.insert)
   const placeholders = [
@@ -33,6 +34,14 @@ const DashboardPage = () => {
       try {
         const data = await convex.query(api.people.searchByName, { name })
         console.log("Search results:", data)
+        if(data.length == 0) {
+          const relatedPeople = await convex.action(api.people.similarPeopleSearch, {
+            searchQuery: name
+          })
+          setHighLightedNodes(relatedPeople.map(p => p._id))
+
+          console.log(relatedPeople)
+        }
       } catch (error) {
         console.error("Error fetching search results:", error)
       }
@@ -138,7 +147,7 @@ const DashboardPage = () => {
         </div>
       </div>
       <div className="absolute top-0 left-0 w-full h-full z-10">
-        <CustomForceGraph3D graphData={gData ?? { nodes: [], links: [] }} />
+        <CustomForceGraph3D graphData={gData ?? { nodes: [], links: [] }} highlightedNodeIds={highlightedNodeIds ?? []} />
       </div>
     </div>
   )
