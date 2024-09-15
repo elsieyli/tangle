@@ -99,7 +99,7 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData}) => {
         }}
       />
       {/* Tooltip for Hovered Node */}
-      {hoveredNode && (
+      {hoveredNode && (<>
         <div
           style={{
             position: "absolute",
@@ -114,6 +114,23 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData}) => {
         >
           {hoveredNode.id}
         </div>
+        <div
+          style={{
+            position: "absolute",
+            left: `10px`,
+            top: `10px`,
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            color: "white",
+            padding: "5px",
+            borderRadius: "3px",
+            pointerEvents: "none", // Make sure the tooltip doesn't interfere with interaction
+          }}
+        >
+          {hoveredNode.id }
+        </div>
+        
+        
+         </>
       )}
     </>
   )
