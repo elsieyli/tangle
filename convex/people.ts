@@ -40,7 +40,7 @@ export const insert = mutation({
       // If the person exists, update their notes
       personId = existingPerson._id;
       await ctx.db.patch(personId, {
-        notes: existingPerson.notes + '\n' +  args.notes,
+        notes: existingPerson.notes + '\n\nMore Info:\n\n' +  args.notes,
       });
     } else {
       // If the person doesn't exist, insert a new entry
@@ -64,7 +64,7 @@ export const insert = mutation({
 export const generateAndAddEmbedding = internalAction({
   args: { personId: v.id("people"), notes: v.string(), name: v.string() },
   handler: async (ctx, args) => {
-    const embedding = await embed_doc(`My name is ${name} and\n`+args.notes);
+    const embedding = await embed_doc(args.notes);
     await ctx.runMutation(internal.people.addEmbedding, {
       personId: args.personId,
       embedding,
@@ -185,7 +185,7 @@ export const getEmbedding = internalQuery({
 
   
 })
-export const similarPeopleByEmbeddingId = internalAction({
+export const similarPeopleByEmbeddingId = action({
   args: {
     embeddingId: v.id("peopleEmbedding"), // Argument to accept an embeddingId
   },
@@ -209,7 +209,7 @@ export const similarPeopleByEmbeddingId = internalAction({
     // Step 3: Filter results and fetch the people data
     const people: Array<Doc<"people">> = await ctx.runQuery(
       internal.people.fetchResults,
-      { ids: results.filter(r => r._score >= 0.50).map((result) => result._id) },
+      { ids: results.filter(r => r._score >= 0.30).map((result) => result._id) },
     );
 
     return people;
@@ -229,7 +229,7 @@ export const similarPeopleVector = internalAction({
     })
     const people: Array<Doc<"people">> = await ctx.runQuery(
       internal.people.fetchResults,
-      { ids: results.filter(r => r._score >= 0.50).map((result) => result._id) },
+      { ids: results.filter(r => r._score >= 0.40).map((result) => result._id) },
     );
     return people
   }
@@ -252,7 +252,7 @@ export const similarPeopleSearch = action({
     console.log(results)
     const people: Array<Doc<"people">> = await ctx.runQuery(
       internal.people.fetchResults,
-      { ids: results.filter(result => result._score >= 0.23).map((result) => result._id) },
+      { ids: results.filter(result => result._score >= 0.25).map((result) => result._id) },
     );
     console.log(`people is ${people}`)
     return people
