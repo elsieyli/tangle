@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ForceGraph3D, { NodeObject } from "react-force-graph-3d"
 import * as THREE from "three"
 import { useEffect, useRef, useState } from "react"
-import {GraphData} from './data'
+import { GraphData } from "./data"
+import { gsap } from "gsap"
 
 // Define a type for the nodes in your graph data
 interface GraphNode extends NodeObject {
@@ -12,14 +14,17 @@ interface GraphNode extends NodeObject {
 }
 
 interface CustomForceGraph3DProps {
-  graphData: GraphData,
-  highlightedNodeIds: string[],
+  graphData: GraphData
+  highlightedNodeIds: string[]
 }
 
-const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData, highlightedNodeIds = []}) => {
+const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
+  graphData,
+  highlightedNodeIds = [],
+}) => {
   const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null)
   const graphRef = useRef<any>(null)
-//   const rotationRef = useRef(0)
+  //   const rotationRef = useRef(0)
 
   // Function to convert 3D coordinates to 2D screen coordinates
   const convert3DTo2D = (node: GraphNode) => {
@@ -36,16 +41,44 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData, highl
     }
   }
 
-  const [_, setTooltipPosition] = useState({ x: 0, y: 0 })
+  useEffect(() => {
+    const animateNodeMovement = (
+      highlightedNodes: GraphNode[],
+      xOffset: number,
+      yOffset: number,
+      zOffset: number
+    ) => {
+      highlightedNodes.forEach((node) => {
+        const targetX = node.x ? node.x + xOffset : +xOffset
+        const targetY = node.y ? node.y + yOffset : +yOffset
+        const targetZ = node.z ? node.z + zOffset : +zOffset
+        gsap.to(node, {
+          fx: targetX, // Animate x position
+          fy: targetY, // Animate x position
+          fz: targetZ, // Animate x position
+          duration: 2, // Duration of animation (1 second)
+          ease: "elastic.out", // Easing function for smooth animation
+        })
+      })
+    }
 
+    if (graphRef.current) {
+      const highlightedNodes = graphData.nodes.filter((node: GraphNode) =>
+        highlightedNodeIds.includes(node.id)
+      )
+      animateNodeMovement(highlightedNodes, 30, 0, 30) // Move x-axis and y-axis closer to the user by 30 units
+    }
+  }, [highlightedNodeIds, graphData.nodes])
+
+
+  const [_, setTooltipPosition] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
     if (graphRef.current) {
       // Modify the link distance to set a default distance between nodes
-      graphRef.current.d3Force('link')?.distance(200); // Setting a link distance of 100 units
+      graphRef.current.d3Force("link")?.distance(150) // Setting a link distance of 100 units
     }
-  }, []);
-
+  }, [])
 
   useEffect(() => {
     if (hoveredNode) {
@@ -57,27 +90,27 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData, highl
     }
   }, [hoveredNode])
 
-//   // Rotate the graph
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       if (graphRef.current) {
-//         rotationRef.current += 0.005 // Adjust the speed of rotation here
+  //   // Rotate the graph
+  //   useEffect(() => {
+  //     const interval = setInterval(() => {
+  //       if (graphRef.current) {
+  //         rotationRef.current += 0.005 // Adjust the speed of rotation here
 
-//         // Rotate the camera in a circular orbit around the center of the graph
-//         const distanceFromCenter = 800 // Distance from the center of the graph
-//         const x = distanceFromCenter * Math.sin(rotationRef.current)
-//         const z = distanceFromCenter * Math.cos(rotationRef.current)
+  //         // Rotate the camera in a circular orbit around the center of the graph
+  //         const distanceFromCenter = 800 // Distance from the center of the graph
+  //         const x = distanceFromCenter * Math.sin(rotationRef.current)
+  //         const z = distanceFromCenter * Math.cos(rotationRef.current)
 
-//         graphRef.current.cameraPosition(
-//           { x, y: 200, z }, // Orbiting at a fixed height (y: 200)
-//           { x: 0, y: 0, z: 0 }, // Always look at the center of the graph
-//           3000 // Duration of the animation (in ms)
-//         )
-//       }
-//     }, 50) // Controls how smooth the rotation is (higher interval = less smooth)
+  //         graphRef.current.cameraPosition(
+  //           { x, y: 200, z }, // Orbiting at a fixed height (y: 200)
+  //           { x: 0, y: 0, z: 0 }, // Always look at the center of the graph
+  //           3000 // Duration of the animation (in ms)
+  //         )
+  //       }
+  //     }, 50) // Controls how smooth the rotation is (higher interval = less smooth)
 
-//     return () => clearInterval(interval) // Clean up on unmount
-//   }, [])
+  //     return () => clearInterval(interval) // Clean up on unmount
+  //   }, [])
 
   return (
     <>
@@ -90,7 +123,7 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData, highl
           const isHighlighted = highlightedNodeIds.includes(n.id)
           const geometry = new THREE.SphereGeometry(8, 16, 16)
           const material = new THREE.MeshBasicMaterial({
-            color: isHighlighted? "orange" : "purple",
+            color: isHighlighted ? "orange" : "purple",
           })
           return new THREE.Mesh(geometry, material)
         }}
@@ -109,30 +142,32 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData, highl
         }}
       />
       {/* Tooltip for Hovered Node */}
-      {hoveredNode && (<>
-    
-        <div
-  style={{
-    position: "absolute",
-    left: `20px`, // Move further away from the left
-    top: `30px`,  // Move further down
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    color: "white",
-    padding: "10px", // Slightly more padding for better appearance
-    borderRadius: "3px",
-    pointerEvents: "none", // Ensure the tooltip doesn't interfere with interaction
-    maxWidth: "200px", // Limit the width to enable text wrapping
-    whiteSpace: "normal", // Allow text wrapping
-    wordWrap: "break-word", // Ensure long words are wrapped
-  }}
->
-  <h2 style={{ margin: 0, fontSize: "18px" }}>{hoveredNode.name}</h2> {/* Larger font size */}
-  <h3 style={{ margin: "10px 0 5px 0", fontSize: "14px" }}>Notes:</h3> {/* Heading before notes */}
-  <p style={{ margin: 0 }}>{hoveredNode.notes}</p>
-</div>
-        
-        
-         </>
+      {hoveredNode && (
+        <>
+          <div
+            style={{
+              position: "absolute",
+              left: `20px`, // Move further away from the left
+              top: `30px`, // Move further down
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              color: "white",
+              padding: "10px", // Slightly more padding for better appearance
+              borderRadius: "3px",
+              pointerEvents: "none", // Ensure the tooltip doesn't interfere with interaction
+              maxWidth: "200px", // Limit the width to enable text wrapping
+              whiteSpace: "normal", // Allow text wrapping
+              wordWrap: "break-word", // Ensure long words are wrapped
+            }}
+          >
+            <h2 style={{ margin: 0, fontSize: "18px" }}>{hoveredNode.name}</h2>{" "}
+            {/* Larger font size */}
+            <h3 style={{ margin: "10px 0 5px 0", fontSize: "14px" }}>
+              Notes:
+            </h3>{" "}
+            {/* Heading before notes */}
+            <p style={{ margin: 0 }}>{hoveredNode.notes}</p>
+          </div>
+        </>
       )}
     </>
   )
