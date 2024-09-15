@@ -1,12 +1,16 @@
 import CustomForceGraph3D from "../components/3DForceGraph"
 import { PlaceholdersAndVanishInput } from "../@/components/ui/placeholders-and-vanish-input"
-import { useConvex } from "convex/react"
+import { useConvex, useQuery } from "convex/react"
 import { api } from "../../convex/_generated/api"
-import { gData } from "../components/data"
+import {useEffect, useState } from "react"
+import { peopleToGraphData } from "../mappers/connectionToLink"
+import { GraphData } from "../components/data"
+import { Doc } from "../../convex/_generated/dataModel"
 
 const DashboardPage = () => {
   const convex = useConvex()
-
+  const [gData, setGData] = useState<GraphData>()
+  const people = useQuery(api.people.get)
   const placeholders = [
     "Search yourself up!",
     "What kind of person do you want to meet?",
@@ -36,7 +40,10 @@ const DashboardPage = () => {
       console.error("Name input is empty or invalid.")
     }
   }
-
+  useEffect(() => {
+    if(people)
+      setGData(peopleToGraphData(people as Doc<"people">[]))
+  }, [people])
   return (
     <div className="w-screen h-screen bg-[#000012] text-white">
       {/* The input */}
@@ -61,7 +68,7 @@ const DashboardPage = () => {
         </button>
       </div>
       <div>
-        <CustomForceGraph3D graphData={gData} />
+        <CustomForceGraph3D graphData={gData?? {nodes: [], links: []}} />
       </div>
     </div>
   )
