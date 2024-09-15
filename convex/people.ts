@@ -54,6 +54,7 @@ export const insert = mutation({
     // Kick off an action to generate an embedding for this person
     await ctx.scheduler.runAfter(0, internal.people.generateAndAddEmbedding, {
       personId,
+      name: args.name,
       notes: args.notes,
     });
   },
@@ -61,9 +62,9 @@ export const insert = mutation({
 
 
 export const generateAndAddEmbedding = internalAction({
-  args: { personId: v.id("people"), notes: v.string() },
+  args: { personId: v.id("people"), notes: v.string(), name: v.string() },
   handler: async (ctx, args) => {
-    const embedding = await embed_doc(args.notes);
+    const embedding = await embed_doc(`My name is ${name} and\n`+args.notes);
     await ctx.runMutation(internal.people.addEmbedding, {
       personId: args.personId,
       embedding,
@@ -174,6 +175,47 @@ export const fetchResults = internalQuery({
     return results;
   },
 });
+export const getEmbedding = internalQuery({
+  args: {
+    embeddingId: v.id("peopleEmbedding")
+  },
+  handler: async (ctx, args) => {
+      return await ctx.db.get(args.embeddingId)
+    }
+
+  
+})
+export const similarPeopleByEmbeddingId = internalAction({
+  args: {
+    embeddingId: v.id("peopleEmbedding"), // Argument to accept an embeddingId
+  },
+  handler: async (ctx, args) => {
+    // Step 1: Retrieve the embedding from the database using embeddingId
+    const embeddingDoc = await ctx.runQuery(internal.people.getEmbedding, {embeddingId: args.embeddingId});
+    if (!embeddingDoc) {
+      throw new Error(`Embedding with ID ${args.embeddingId} not found.`);
+    }
+
+    const { embedding } = embeddingDoc;
+    if (!embedding || !Array.isArray(embedding)) {
+      throw new Error(`Invalid embedding data for ID ${args.embeddingId}.`);
+    }
+
+    // Step 2: Perform the vector search using the retrieved embedding
+    const results = await ctx.vectorSearch("peopleEmbedding", "by_embedding", {
+      vector: embedding,
+    });
+
+    // Step 3: Filter results and fetch the people data
+    const people: Array<Doc<"people">> = await ctx.runQuery(
+      internal.people.fetchResults,
+      { ids: results.filter(r => r._score >= 0.50).map((result) => result._id) },
+    );
+
+    return people;
+  }
+});
+
 
 export const similarPeopleVector = internalAction({
   args: {
@@ -182,7 +224,7 @@ export const similarPeopleVector = internalAction({
   handler: async (ctx, args) => {
     const results = await ctx.vectorSearch("peopleEmbedding", "by_embedding", {
       vector: args.embedding,
-      limit: 16,
+      
       
     })
     const people: Array<Doc<"people">> = await ctx.runQuery(
@@ -203,13 +245,14 @@ export const similarPeopleSearch = action({
     console.log(`vector is ${vector}`)
     const results = await ctx.vectorSearch("peopleEmbedding", "by_embedding", {
       vector: vector,
-      limit: 4,
+      limit: 200,
+      
     })
     
     console.log(results)
     const people: Array<Doc<"people">> = await ctx.runQuery(
       internal.people.fetchResults,
-      { ids: results.filter(result => result._score >= 0.25).map((result) => result._id) },
+      { ids: results.filter(result => result._score >= 0.23).map((result) => result._id) },
     );
     console.log(`people is ${people}`)
     return people
