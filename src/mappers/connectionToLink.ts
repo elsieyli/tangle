@@ -26,7 +26,7 @@ export const connectionsToLinks = (people: Doc<"people">[]) => {
 
 export const peopleToGraphData = (people: Doc<"people">[]): GraphData => {
     const links = connectionsToLinks(people)
-    const nodes = people.map(p => ({id: p._id, name: p.name, notes: p.notes}))
+    const nodes = people.map(p => ({id: p._id, name: p.name, notes: p.notes, embeddingId: p!.embedding_id!}))
 
     return {
         nodes: nodes,
