@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { peopleToGraphData } from "../mappers/connectionToLink"
 import { GraphData } from "../components/data"
 import { Doc } from "../../convex/_generated/dataModel"
+import StarField from '../starfield'
 
 const DashboardPage = () => {
   const convex = useConvex()
@@ -134,7 +135,6 @@ const DashboardPage = () => {
     </div>
   </div>
 )}
-
         </div>
       </div>
       <div className="absolute top-0 left-0 w-full h-full z-10">

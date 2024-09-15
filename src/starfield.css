@@ -1,0 +1,41 @@
+/* Star animations */
+@keyframes animStar {
+   from {
+     transform: translateY(0px);
+   }
+   to {
+     transform: translateY(-2560px) translateX(-2560px);
+   }
+ }
+ 
+ @keyframes animShootingStar {
+   from {
+     transform: translateY(0px) translateX(0px) rotate(-45deg);
+     opacity: 1;
+     height: 5px;
+   }
+   to {
+     transform: translateY(-2560px) translateX(-2560px) rotate(-45deg);
+     opacity: 0;
+     height: 800px;
+   }
+ }
+ 
+ .star, .shooting-star {
+   position: absolute;
+   border-radius: 50%;
+   background: white;
+ }
+ 
+ .star {
+   animation: animStar 100s linear infinite;
+ }
+ 
+ .shooting-star {
+   width: 5px;
+   height: 80px;
+   background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+   animation: animShootingStar 10s linear infinite;
+ }
+ 
+ 
