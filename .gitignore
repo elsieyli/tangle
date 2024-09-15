@@ -1,5 +1,4 @@
-.env.local
-.env
+
 # Logs
 logs
 *.log
@@ -26,4 +25,3 @@ dist-ssr
 *.sw?
 /node_modules
 
-.env.local

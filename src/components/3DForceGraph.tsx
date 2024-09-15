@@ -36,7 +36,7 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData}) => {
     }
   }
 
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+  const [_, setTooltipPosition] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
     if (hoveredNode) {

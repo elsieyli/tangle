@@ -26,11 +26,31 @@ export const searchByName = query({
 export const insert = mutation({
   args: { name: v.string(), notes: v.string() },
   handler: async (ctx, args) => {
-    const personId = await ctx.db.insert("people", {
-      name: args.name.toLowerCase(),
-      notes: args.notes,
-      connected_to: [],
-    });
+    // Convert name to lowercase to ensure case-insensitive matching
+    const name = args.name.toLowerCase();
+
+    // Check if a person with the given name already exists
+    const existingPerson = await ctx.db.query("people")
+      .filter(q => q.eq(q.field("name"), name))
+      .first();
+
+    let personId;
+
+    if (existingPerson) {
+      // If the person exists, update their notes
+      personId = existingPerson._id;
+      await ctx.db.patch(personId, {
+        notes: existingPerson.notes + '\n' +  args.notes,
+      });
+    } else {
+      // If the person doesn't exist, insert a new entry
+      personId = await ctx.db.insert("people", {
+        name,
+        notes: args.notes,
+        connected_to: [],
+      });
+    }
+
     // Kick off an action to generate an embedding for this person
     await ctx.scheduler.runAfter(0, internal.people.generateAndAddEmbedding, {
       personId,
@@ -38,6 +58,7 @@ export const insert = mutation({
     });
   },
 });
+
 
 export const generateAndAddEmbedding = internalAction({
   args: { personId: v.id("people"), notes: v.string() },
@@ -59,18 +80,35 @@ export const addEmbedding = internalMutation({
   handler: async (ctx, args) => {
     const person = await ctx.db.get(args.personId);
     if (person === null) {
-      // No movie to update
+      // No person to update
       return;
     }
-    const notesEmbedding = await ctx.db.insert("peopleEmbedding", {
-      embedding: args.embedding,
-      person_id: args.personId,
-    });
-    await ctx.db.patch(args.personId, {
-      embedding_id: notesEmbedding,
-    });
+    
+    // Check if an embedding already exists for this person
+    const existingEmbedding = await ctx.db.query("peopleEmbedding")
+      .filter(q => q.eq(q.field("person_id"), args.personId))
+      .first();
+
+    if (existingEmbedding) {
+      // If embedding exists, update it
+      await ctx.db.patch(existingEmbedding._id, {
+        embedding: args.embedding,
+      });
+    } else {
+      // If embedding does not exist, insert a new entry
+      const notesEmbedding = await ctx.db.insert("peopleEmbedding", {
+        embedding: args.embedding,
+        person_id: args.personId,
+      });
+      
+      // Update the person record with the new embedding_id
+      await ctx.db.patch(args.personId, {
+        embedding_id: notesEmbedding,
+      });
+    }
   },
 });
+
 
 export const generateConnections = internalAction({
   args: { personId: v.id("people"),  embedding: v.array(v.number()) },
@@ -149,7 +187,7 @@ export const similarPeopleVector = internalAction({
     })
     const people: Array<Doc<"people">> = await ctx.runQuery(
       internal.people.fetchResults,
-      { ids: results.filter(r => r._score >= 0.40).map((result) => result._id) },
+      { ids: results.filter(r => r._score >= 0.50).map((result) => result._id) },
     );
     return people
   }

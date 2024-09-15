@@ -10,18 +10,15 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const canvas = document.getElementById("constellationel") as HTMLCanvasElement;
-    let constellationInstance: Constellation | null = null;
 
     if (canvas) {
       // Initialize the constellation effect
-      constellationInstance = new Constellation(canvas);
+      new Constellation(canvas);
     }
 
     // Cleanup function to avoid multiple instances
     return () => {
-      if (canvas) {
-        constellationInstance = null; // Clears the instance
-      }
+
     };
   }, []); // Empty dependency array ensures this effect only runs once
 
