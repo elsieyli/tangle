@@ -12,10 +12,11 @@ interface GraphNode extends NodeObject {
 }
 
 interface CustomForceGraph3DProps {
-  graphData: GraphData
+  graphData: GraphData,
+  highlightedNodeIds: string[],
 }
 
-const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData}) => {
+const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData, highlightedNodeIds = []}) => {
   const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null)
   const graphRef = useRef<ForceGraphMethods>(null)
 //   const rotationRef = useRef(0)
@@ -85,10 +86,11 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData}) => {
         ref={graphRef}
         graphData={graphData}
         //   can pass node as parameter below
-        nodeThreeObject={() => {
+        nodeThreeObject={(n) => {
+          const isHighlighted = highlightedNodeIds.includes(n.id)
           const geometry = new THREE.SphereGeometry(8, 16, 16)
           const material = new THREE.MeshBasicMaterial({
-            color: "purple",
+            color: isHighlighted? "orange" : "purple",
           })
           return new THREE.Mesh(geometry, material)
         }}
