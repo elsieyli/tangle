@@ -41,6 +41,8 @@ const DashboardPage = () => {
           setHighLightedNodes(relatedPeople.map(p => p._id))
 
           console.log(relatedPeople)
+        }else {
+          setHighLightedNodes(data.map(p => p._id))
         }
       } catch (error) {
         console.error("Error fetching search results:", error)
