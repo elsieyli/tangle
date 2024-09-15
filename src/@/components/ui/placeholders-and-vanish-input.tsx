@@ -173,7 +173,7 @@ export function PlaceholdersAndVanishInput({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     vanishAndSubmit()
-    onSubmit && onSubmit(e)
+    onSubmit(e)
   }
   return (
     <form
@@ -190,7 +190,7 @@ export function PlaceholdersAndVanishInput({
         )}
         ref={canvasRef}
       />
-      <input
+      {/* <input
         onChange={(e) => {
           if (!animating) {
             setValue(e.target.value)
@@ -205,7 +205,25 @@ export function PlaceholdersAndVanishInput({
           "w-full relative text-sm sm:text-base z-50 border-none dark:text-white bg-transparent text-black h-full rounded-full focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20",
           animating && "text-transparent dark:text-transparent"
         )}
+      /> */}
+      <input
+        name="name"  
+        onChange={(e) => {
+          if (!animating) {
+            setValue(e.target.value)
+            onChange(e)
+          }
+        }}
+        onKeyDown={handleKeyDown}
+        ref={inputRef}
+        value={value}
+        type="text"
+        className={cn(
+          "w-full relative text-sm sm:text-base z-50 border-none dark:text-white bg-transparent text-black h-full rounded-full focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20",
+          animating && "text-transparent dark:text-transparent"
+        )}
       />
+
 
       <button
         disabled={!value}

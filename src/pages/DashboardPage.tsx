@@ -1,7 +1,12 @@
 import CustomForceGraph3D from "../components/3DForceGraph"
 import { PlaceholdersAndVanishInput } from "../@/components/ui/placeholders-and-vanish-input"
+import { useConvex } from "convex/react"
+import { api } from "../../convex/_generated/api"
+import { gData } from "../components/data"
 
 const DashboardPage = () => {
+  const convex = useConvex()
+
   const placeholders = [
     "Search yourself up!",
     "What kind of person do you want to meet?",
@@ -11,10 +16,27 @@ const DashboardPage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.value)
   }
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log("submitted")
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log(e)
+    e.preventDefault() // Prevent form from submitting and reloading the page
+    const formData = new FormData(e.currentTarget)
+    const name = (formData.get("name") as string).toLowerCase()// Get the name from form data
+
+    // Ensure that name is a valid string (default to an empty string if null)
+    if (name) {
+        console.log("PLEASEEE", name)
+      try {
+        
+        const data = await convex.query(api.people.searchByName, { name })
+        console.log("Search results:", data)
+      } catch (error) {
+        console.error("Error fetching search results:", error)
+      }
+    } else {
+      console.error("Name input is empty or invalid.")
+    }
   }
+
   return (
     <div className="w-screen h-screen bg-[#000012] text-white">
       {/* The input */}
@@ -39,11 +61,10 @@ const DashboardPage = () => {
         </button>
       </div>
       <div>
-        <CustomForceGraph3D />
+        <CustomForceGraph3D graphData={gData} />
       </div>
     </div>
   )
 }
 
-export default DashboardPage;
-
+export default DashboardPage

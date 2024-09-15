@@ -1,7 +1,7 @@
 import ForceGraph3D, { NodeObject } from "react-force-graph-3d"
-import { gData } from "./data"
 import * as THREE from "three"
 import { useEffect, useRef, useState } from "react"
+import {GraphData} from './data'
 
 // Define a type for the nodes in your graph data
 interface GraphNode extends NodeObject {
@@ -11,7 +11,11 @@ interface GraphNode extends NodeObject {
   z?: number
 }
 
-const CustomForceGraph3D = () => {
+interface CustomForceGraph3DProps {
+  graphData: GraphData
+}
+
+const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData}) => {
   const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const graphRef = useRef<any>(null)
@@ -71,7 +75,7 @@ const CustomForceGraph3D = () => {
       <ForceGraph3D
         height={700}
         ref={graphRef}
-        graphData={gData}
+        graphData={graphData}
         //   can pass node as parameter below
         nodeThreeObject={() => {
           const geometry = new THREE.SphereGeometry(8, 16, 16)
