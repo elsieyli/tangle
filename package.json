@@ -11,12 +11,12 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "convex": "^1.16.0",
-    "framer-motion": "^11.5.4",
-    "jquery": "^3.7.1",
     "cohere": "^1.1.1",
     "cohere-ai": "^7.13.1",
+    "convex": "^1.16.0",
     "dotenv": "^16.4.5",
+    "framer-motion": "^11.5.4",
+    "jquery": "^3.7.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-force-graph-3d": "^1.24.3",
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@types/jquery": "^3.5.30",
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
