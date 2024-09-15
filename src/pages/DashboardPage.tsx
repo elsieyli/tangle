@@ -65,6 +65,7 @@ const DashboardPage = () => {
     setFormVisible(!isFormVisible);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFormSubmit = (e: any) => {
     e.preventDefault();
     // Handle the form submission logic here

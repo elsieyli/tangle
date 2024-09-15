@@ -8,6 +8,7 @@ import Modal from "./Modal" // Import the Modal component
 import { useAction } from "convex/react"
 import { api } from "../../convex/_generated/api"
 import { Id } from "../../convex/_generated/dataModel"
+import { Card } from "../@/components/ui/card-stack"
 // Define a type for the nodes in your graph data
 interface GraphNode extends NodeObject {
   id: string
