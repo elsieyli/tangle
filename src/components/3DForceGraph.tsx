@@ -100,34 +100,26 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData}) => {
       />
       {/* Tooltip for Hovered Node */}
       {hoveredNode && (<>
+    
         <div
-          style={{
-            position: "absolute",
-            left: `${tooltipPosition.x}px`,
-            top: `${tooltipPosition.y}px`,
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            color: "white",
-            padding: "5px",
-            borderRadius: "3px",
-            pointerEvents: "none", // Make sure the tooltip doesn't interfere with interaction
-          }}
-        >
-          {hoveredNode.id}
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            left: `10px`,
-            top: `10px`,
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            color: "white",
-            padding: "5px",
-            borderRadius: "3px",
-            pointerEvents: "none", // Make sure the tooltip doesn't interfere with interaction
-          }}
-        >
-          {hoveredNode.id }
-        </div>
+  style={{
+    position: "absolute",
+    left: `20px`, // Move further away from the left
+    top: `30px`,  // Move further down
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    color: "white",
+    padding: "10px", // Slightly more padding for better appearance
+    borderRadius: "3px",
+    pointerEvents: "none", // Ensure the tooltip doesn't interfere with interaction
+    maxWidth: "200px", // Limit the width to enable text wrapping
+    whiteSpace: "normal", // Allow text wrapping
+    wordWrap: "break-word", // Ensure long words are wrapped
+  }}
+>
+  <h2 style={{ margin: 0, fontSize: "18px" }}>{hoveredNode.name}</h2> {/* Larger font size */}
+  <h3 style={{ margin: "10px 0 5px 0", fontSize: "14px" }}>Notes:</h3> {/* Heading before notes */}
+  <p style={{ margin: 0 }}>{hoveredNode.notes}</p>
+</div>
         
         
          </>
