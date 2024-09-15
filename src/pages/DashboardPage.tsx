@@ -109,7 +109,7 @@ const DashboardPage = () => {
           <label className="block text-gray-300 mb-2">Name:</label>
           <input
             type="text"
-            className="w-full px-3 py-2 border rounded bg-[#4b007d] text-white border-[#5e008e] focus:border-[#7a00b3]"
+            className="w-full px-3 py-2 border rounded bg-[#4b007d] text-white border-[#5e008e] focus:border-[#7a00b3] focus:outline-none"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -118,7 +118,7 @@ const DashboardPage = () => {
         <div className="mb-4">
           <label className="block text-gray-300 mb-2">Notes:</label>
           <textarea
-            className="w-full px-3 py-2 border rounded bg-[#4b007d] text-white border-[#5e008e] focus:border-[#7a00b3]"
+            className="w-full px-3 py-2 border rounded bg-[#4b007d] text-white border-[#5e008e] focus:border-[#7a00b3] focus:outline-none"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             required

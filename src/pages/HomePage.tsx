@@ -50,7 +50,7 @@ const HomePage: React.FC = () => {
               {/* Search bar with placeholder "enter your name" */}
               <input
                 type="text"
-                className="px-4 py-2 text-lg bg-white text-black rounded-l-md"
+                className="px-4 py-2 text-lg bg-white text-black rounded-l-md focus:outline-none"
                 placeholder="Enter Your Name!"
                 value={name}
                 onChange={handleSearchChange}
