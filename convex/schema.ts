@@ -5,7 +5,7 @@ export default defineSchema({
   people: defineTable({
     name: v.string(),
     notes: v.string(),
-    connected_to: v.array(v.string()),
+    connected_to: v.array(v.id("people")),
     embedding_id: v.optional(v.id("peopleEmbedding")),
     }).index("by_embedding", ['embedding_id'],
     ),
