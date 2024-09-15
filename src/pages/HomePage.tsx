@@ -4,22 +4,22 @@ import { Link } from "react-router-dom";
 import Constellation from "../constellation"; // Import the constellation class
 
 const HomePage: React.FC = () => {
-  useEffect(() => {
-    const canvas = document.getElementById("constellationel") as HTMLCanvasElement;
-    let constellationInstance: Constellation | null = null;
+  // useEffect(() => {
+  //   const canvas = document.getElementById("constellationel") as HTMLCanvasElement;
+  //   let constellationInstance: Constellation | null = null;
 
-    if (canvas) {
-      // Initialize the constellation effect
-      constellationInstance = new Constellation(canvas);
-    }
+  //   if (canvas) {
+  //     // Initialize the constellation effect
+  //     constellationInstance = new Constellation(canvas);
+  //   }
 
-    // Cleanup function to avoid multiple instances
-    return () => {
-      if (canvas) {
-        constellationInstance = null; // Clears the instance
-      }
-    };
-  }, []); // Empty dependency array ensures this effect only runs once
+  //   // Cleanup function to avoid multiple instances
+  //   return () => {
+  //     if (canvas) {
+  //       constellationInstance = null; // Clears the instance
+  //     }
+  //   };
+  // }, []); // Empty dependency array ensures this effect only runs once
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#150429]">
