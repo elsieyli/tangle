@@ -76,7 +76,7 @@ export const generateConnections = internalAction({
     })
     await ctx.runMutation(internal.people.connectUserToOthers, {
       personId: args.personId, 
-      similarPeople: similarPeople.map(p => p._id),
+      similarPeople: similarPeople.map(p => p._id).filter(id => id != args.personId),
     })
     
   }
