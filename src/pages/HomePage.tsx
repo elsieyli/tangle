@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import TypingButton from "../components/TypingButton";
 import Constellation from "../constellation"; // Import the constellation class
 
 const HomePage: React.FC = () => {
   const [showSearch, setShowSearch] = useState<boolean>(false); // Track whether to show the search bar
   const [name, setName] = useState<string>(""); // Track the input value
-  const navigate = useNavigate(); // Hook to navigate to different routes
 
   useEffect(() => {
     const canvas = document.getElementById("constellationel") as HTMLCanvasElement;
