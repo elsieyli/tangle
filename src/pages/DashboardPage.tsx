@@ -1,6 +1,6 @@
 import CustomForceGraph3D from "../components/3DForceGraph"
 import { PlaceholdersAndVanishInput } from "../@/components/ui/placeholders-and-vanish-input"
-import { useConvex, useQuery } from "convex/react"
+import { useConvex, useMutation, useQuery } from "convex/react"
 import { api } from "../../convex/_generated/api"
 import { useEffect, useState } from "react"
 import { peopleToGraphData } from "../mappers/connectionToLink"
@@ -11,6 +11,7 @@ const DashboardPage = () => {
   const convex = useConvex()
   const [gData, setGData] = useState<GraphData>()
   const people = useQuery(api.people.get)
+  const addPeopleMutation = useMutation(api.people.insert)
   const placeholders = [
     "Search yourself up!",
     "What kind of person do you want to meet?",
@@ -58,10 +59,13 @@ const DashboardPage = () => {
     // Handle the form submission logic here
     console.log('Name:', name);
     console.log('Notes:', notes);
+    addPeopleMutation({name, notes})
     // After submission, you might want to reset the form and hide it
     setName('');
     setNotes('');
     setFormVisible(false);
+
+    
   };
 
   return (
@@ -90,7 +94,7 @@ const DashboardPage = () => {
           {isFormVisible && (
   <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-70 z-30">
     <div className="bg-gradient-to-br from-[#2a003e] to-[#3a005c] p-6 rounded-lg shadow-lg relative">
-      <h2 className="text-xl mb-4 text-white">Add a New Entry</h2>
+      <h2 className="text-xl mb-4 text-white">Add a New Connection!</h2>
       <form onSubmit={handleFormSubmit}>
         <div className="mb-4">
           <label className="block text-gray-300 mb-2">Name:</label>
