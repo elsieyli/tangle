@@ -8,7 +8,6 @@ import StarField from '../starfield';
 import Modal from "./Modal" // Import the Modal component
 import { useAction } from "convex/react"
 import { api } from "../../convex/_generated/api"
-import { Card } from '../@/components/ui/card-stack';
 import { Id } from "../../convex/_generated/dataModel"
 import { Card } from "../@/components/ui/card-stack"
 // Define a type for the nodes in your graph data
