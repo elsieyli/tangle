@@ -8,6 +8,7 @@ import StarField from '../starfield';
 import Modal from "./Modal" // Import the Modal component
 import { useAction } from "convex/react"
 import { api } from "../../convex/_generated/api"
+import { Card } from '../@/components/ui/card-stack';
 import { Id } from "../../convex/_generated/dataModel"
 interface GraphNode extends NodeObject {
   id: string
@@ -44,15 +45,7 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
     setIsModalOpen(false)
   }
 
-  // Handle opening the modal
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
 
-  // Handle closing the modal
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
 
   const convert3DTo2D = (node: GraphNode) => {
     if (!node || !graphRef.current) return null;
@@ -65,8 +58,8 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
     return {
       x: vector.x * widthHalf + widthHalf,
       y: -(vector.y * heightHalf) + heightHalf,
-    };
-  };
+    }
+  }
 
   useEffect(() => {
     if (isModalOpen && clickedNode) {
@@ -218,7 +211,7 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
 
       {/* Tooltip for Hovered Node */}
       {hoveredNode && (
-        <>
+        
           <div
             style={{
               position: "absolute",
@@ -255,7 +248,7 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
               {hoveredNode.notes.length > 250 && ".."}
             </p>
           </div>
-        </>
+        
       )}
       {clickedNode && !hoveredNode && (
         <div
@@ -270,14 +263,16 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
             pointerEvents: "none", // Ensure the tooltip doesn't interfere with interaction
             maxWidth: "200px", // Limit the width to enable text wrapping
             whiteSpace: "normal", // Allow text wrapping
-            wordWrap: "break-word", // Ensure long words are wrapped
+            wordWrap: "break-word", 
+            zIndex:1 // Ensure long words are wrapped
           }}
         >
           <h2 style={{ margin: 0, fontSize: "18px" }}>{clickedNode.name}</h2>
           <button
             className="mt-3 mb-1 relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
             style={{
-              pointerEvents: "auto", // Make the button clickable
+              zIndex: 1,
+               pointerEvents: "auto", // Make the button clickable
               cursor: "pointer", // Ensure it has the pointer cursor on hover
             }}
             onClick={openModal} // Open the modal on button click
@@ -299,7 +294,7 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
       <Modal suggestedPeople={suggestedPeople} isOpen={isModalOpen} onClose={closeModal} title="Meet Someone!">
         <p>Meeting details for {clickedNode?.name}</p>
       </Modal>
-    </>
+    </div>
   )
 }
 

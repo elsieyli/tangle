@@ -52,7 +52,9 @@ const HomePage: React.FC = () => {
 
         <div className="mt-10">
           {!showSearch ? (
-            <TypingButton text="Start now" onClick={handleStartClick} /> // Start button
+            <Link to="/dashboard">
+               <TypingButton text="Start now" /> // Start button
+            </Link>
           ) : (
             <div className="flex justify-center items-center space-x-2">
               {/* Search bar with placeholder "enter your name" */}
@@ -63,12 +65,7 @@ const HomePage: React.FC = () => {
                 value={name}
                 onChange={handleSearchChange}
               />
-              {/* "Go" button */}
-              <Link to="/dashboard">
-                <button className="px-4 py-2 text-lg bg-black text-white rounded-r-md hover:bg-gray-800">
-                  Go
-                </button>
-              </Link>
+              
             </div>
           )}
         </div>
