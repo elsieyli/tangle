@@ -145,9 +145,9 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
           height={700}
           ref={graphRef}
           graphData={graphData}
-          nodeThreeObject={(node: GraphNoden) => {
+          nodeThreeObject={(n) => {
             const isHighlighted = highlightedNodeIds.includes(n.id)
-          const geometry = new THREE.SphereGeometry(8, 16, 16);
+            const geometry = new THREE.SphereGeometry(8, 16, 16);
             const material = new THREE.MeshBasicMaterial({ color: isHighlighted ? "orange" : 'purple' });
             const mesh = new THREE.Mesh(geometry, material);
 
@@ -188,9 +188,10 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
               maxWidth: "200px", // Limit the width to enable text wrapping
               whiteSpace: "normal", // Allow text wrapping
               wordWrap: "break-word", // Ensure long words are wrapped
+              zIndex: 1
             }}
           >
-            <h2 style={{ margin: 0, fontSize: "18px" }}>{hoveredNode.name}</h2>{" "}
+            <h2 style={{ margin: 0, fontSize: "18px"}}>{hoveredNode.name}</h2>{" "}
             {/* Larger font size */}
             <h3 style={{ margin: "10px 0 5px 0", fontSize: "14px" }}>
               Notes:
