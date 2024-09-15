@@ -1,4 +1,4 @@
-import ForceGraph3D, { NodeObject } from "react-force-graph-3d"
+import ForceGraph3D, { NodeObject, ForceGraphMethods } from "react-force-graph-3d"
 import * as THREE from "three"
 import { useEffect, useRef, useState } from "react"
 import {GraphData} from './data'
@@ -17,8 +17,7 @@ interface CustomForceGraph3DProps {
 
 const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData}) => {
   const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const graphRef = useRef<any>(null)
+  const graphRef = useRef<ForceGraphMethods>(null)
 //   const rotationRef = useRef(0)
 
   // Function to convert 3D coordinates to 2D screen coordinates
@@ -37,6 +36,15 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({graphData}) => {
   }
 
   const [_, setTooltipPosition] = useState({ x: 0, y: 0 })
+
+
+  useEffect(() => {
+    if (graphRef.current) {
+      // Modify the link distance to set a default distance between nodes
+      graphRef.current.d3Force('link')?.distance(200); // Setting a link distance of 100 units
+    }
+  }, []);
+
 
   useEffect(() => {
     if (hoveredNode) {
