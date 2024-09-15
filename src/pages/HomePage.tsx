@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import TypingButton from "../components/TypingButton";
 import { Link } from "react-router-dom";
-import Constellation from "../constellation"; // Import the constellation class
 
 const HomePage: React.FC = () => {
   // useEffect(() => {
