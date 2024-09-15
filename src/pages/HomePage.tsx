@@ -8,8 +8,14 @@ const HomePage: React.FC = () => {
   const [name, setName] = useState<string>(""); // Track the input value
 
   useEffect(() => {
-    const canvas = document.getElementById("constellationel") as HTMLCanvasElement;
+    // Retrieve the name from localStorage when the component mounts
+    const savedName = localStorage.getItem("userName");
+    if (savedName) {
+      setName(savedName);
+      setShowSearch(true); // Optionally show the search bar if a name exists
+    }
 
+    const canvas = document.getElementById("constellationel") as HTMLCanvasElement;
     if (canvas) {
       // Initialize the constellation effect
       new Constellation(canvas);
@@ -17,7 +23,7 @@ const HomePage: React.FC = () => {
 
     // Cleanup function to avoid multiple instances
     return () => {
-
+      // Add cleanup logic here if necessary
     };
   }, []); // Empty dependency array ensures this effect only runs once
 
@@ -26,7 +32,9 @@ const HomePage: React.FC = () => {
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value); // Update the name input
+    const newName = e.target.value;
+    setName(newName); // Update the name input
+    localStorage.setItem("userName", newName); // Save the name to localStorage
   };
 
   return (
