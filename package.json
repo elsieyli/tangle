@@ -13,10 +13,11 @@
     "clsx": "^2.1.1",
     "convex": "^1.16.0",
     "framer-motion": "^11.5.4",
+    "jquery": "^3.7.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.2",
     "react-force-graph-3d": "^1.24.3",
+    "react-router-dom": "^6.26.2",
     "tailwind-merge": "^2.5.2",
     "three": "^0.168.0"
   },
