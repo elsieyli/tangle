@@ -47,6 +47,10 @@ export const generateAndAddEmbedding = internalAction({
       personId: args.personId,
       embedding,
     });
+    await ctx.runAction(internal.people.generateConnections, {
+      personId: args.personId, 
+      embedding: embedding,
+    })
   },
 });
 
