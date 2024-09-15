@@ -47,6 +47,10 @@ export const generateAndAddEmbedding = internalAction({
       personId: args.personId,
       embedding,
     });
+    await ctx.runAction(internal.people.generateConnections, {
+      personId: args.personId, 
+      embedding: embedding,
+    })
   },
 });
 
@@ -68,9 +72,46 @@ export const addEmbedding = internalMutation({
   },
 });
 
+export const generateConnections = internalAction({
+  args: { personId: v.id("people"),  embedding: v.array(v.number()) },
+  handler: async (ctx, args) => {
+    const similarPeople = await ctx.runAction(internal.people.similarPeopleVector, {
+      embedding: args.embedding,
+    })
+    await ctx.runMutation(internal.people.connectUserToOthers, {
+      personId: args.personId, 
+      similarPeople: similarPeople.map(p => p._id).filter(id => id != args.personId),
+    })
+    
+  }
+})
 
+export const connectUserToOthers = internalMutation({
+  args: {personId: v.id("people"), similarPeople: v.array(v.id("people"))},
+  handler: async (ctx, args) => {
+    const peopleToConnect = await Promise.all(
+      args.similarPeople.map(async id => await ctx.db.get(id))
+    )
+    const person = await ctx.db.get(args.personId)
+    if (person == null) {
+      return
+    }
 
+    var newConnected = person?.connected_to!
+    peopleToConnect.forEach(p => newConnected.push(p?._id!))
 
+    await ctx.db.patch(args.personId, {connected_to: newConnected})
+    peopleToConnect.forEach(
+      p => p?.connected_to.push(person?._id!)
+    )
+    const patchWork = peopleToConnect.map(
+      async p => await ctx.db.patch(p?._id!, {connected_to: p?.connected_to})
+    )
+    await Promise.all(patchWork)
+
+  }
+
+})
 
 
 export const fetchResults = internalQuery({
@@ -104,10 +145,11 @@ export const similarPeopleVector = internalAction({
     const results = await ctx.vectorSearch("peopleEmbedding", "by_embedding", {
       vector: args.embedding,
       limit: 16,
+      
     })
     const people: Array<Doc<"people">> = await ctx.runQuery(
       internal.people.fetchResults,
-      { ids: results.map((result) => result._id) },
+      { ids: results.filter(r => r._score >= 0.40).map((result) => result._id) },
     );
     return people
   }
