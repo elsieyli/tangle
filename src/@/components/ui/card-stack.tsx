@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { cn } from "../../lib/utils"
 
-export type Card = {
+type Card = {
   id?: string
   name?: string
   content?: string
