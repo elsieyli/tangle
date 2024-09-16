@@ -5,9 +5,9 @@ import { motion } from "framer-motion"
 import { cn } from "../../lib/utils"
 
 export type Card = {
-  id: string
-  name: string
-  content: string
+  id?: string
+  name?: string
+  content?: string
 }
 
 export const CardStack = ({
@@ -47,7 +47,7 @@ export const CardStack = ({
   return (
     <div className="relative h-60 w-60 md:h-60 md:w-96">
       {console.log(cards)}
-      {cards.map((card: Card, index: number) => {
+      {cards.map((card, index) => {
         return (
           <motion.div
             key={card.name}
@@ -62,16 +62,14 @@ export const CardStack = ({
             }}
           >
             <div className="font-normal text-neutral-300">
-              {card.content && card.content.slice(0, 180)}
-              {card.content && card.content.length > 180 && "..."}
+              {card.content.slice(0, 180)}
+              {card.content.length > 180 && "..."}
             </div>
             <div>
               <p className="text-neutral-500 font-medium">
                 <div className="flex justify-between">
                   <div className="text-3xl">
-                    <Highlight>
-                      {capitalizeWords(card.name)}
-                    </Highlight>
+                    <Highlight>{capitalizeWords(card.name)}</Highlight>
                   </div>
                   <button
                     onClick={nextCard}
