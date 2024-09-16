@@ -1,4 +1,3 @@
-import { Id } from "../../convex/_generated/dataModel";
 export interface Link {
   source: string;
   target: string;
@@ -9,7 +8,6 @@ export interface Node {
   id: string;
   name: string;
   notes: string;
-  embeddingId: Id<"peopleEmbedding">;
   x?: number
   y?: number
   z?: number

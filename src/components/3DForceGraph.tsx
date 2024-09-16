@@ -2,19 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ForceGraph3D, { NodeObject } from 'react-force-graph-3d';
 import * as THREE from 'three';
-import {  GraphData, Node  } from "./data"
+import {  GraphData  } from "./data"
 import { gsap } from "gsap";
 import StarField from '../starfield';
-import Modal from "./Modal" // Import the Modal component
-import { useAction } from "convex/react"
-import { api } from "../../convex/_generated/api"
-import { Id } from "../../convex/_generated/dataModel"
+
 interface GraphNode extends NodeObject {
-  id: string
-  embeddingId: Id<"peopleEmbedding">
-  x?: number
-  y?: number
-  z?: number
+  id: string;
+  name?: string;
+  notes?: string;
+  x?: number;
+  y?: number;
+  z?: number;
 }
 
 interface CustomForceGraph3DProps {
@@ -27,32 +25,8 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
   highlightedNodeIds = [],
 }) => {
   const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null)
-  const [clickedNode, setClickedNode] = useState<GraphNode | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false) // State for modal visibility
-  const [suggestedPeople, setSuggestedPeople] = useState<Card[]>([]) // Store fetched data
-  const getSuggested = useAction(api.people.similarPeopleByEmbeddingId)
   const graphRef = useRef<any>(null)
   //   const rotationRef = useRef(0)
-
-  // Handle opening the modal
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
-
-  // Handle closing the modal
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
-
-  // Handle opening the modal
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
-
-  // Handle closing the modal
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
 
   const convert3DTo2D = (node: GraphNode) => {
     if (!node || !graphRef.current) return null;
@@ -67,22 +41,6 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
       y: -(vector.y * heightHalf) + heightHalf,
     };
   };
-
-  useEffect(() => {
-    if (isModalOpen && clickedNode) {
-      // Fetch the suggested people when the modal is opened
-      getSuggested({ embeddingId: clickedNode.embeddingId }).then((data) => {
-        // Transform or map data to fit the CardStack format
-        const formattedData = data.map((person: any) => ({
-          id: person._id,
-          name: person.name,
-          content: person.notes, // Adjust according to your data format
-        }))
-        console.log(formattedData)
-        setSuggestedPeople(formattedData)
-      })
-    }
-  }, [isModalOpen, clickedNode, getSuggested])
 
   useEffect(() => {
     const animateNodeMovement = (
@@ -106,12 +64,13 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
     }
 
     if (graphRef.current) {
-      const highlightedNodes = graphData.nodes.filter((node: Node) =>
+      const highlightedNodes = graphData.nodes.filter((node: GraphNode) =>
         highlightedNodeIds.includes(node.id)
       )
       animateNodeMovement(highlightedNodes, 30, 0, 30) // Move x-axis and y-axis closer to the user by 30 units
     }
   }, [highlightedNodeIds, graphData.nodes])
+
 
   const [_, setTooltipPosition] = useState({ x: 0, y: 0 })
 
@@ -210,10 +169,7 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
             setHoveredNode(node);
             document.body.style.cursor = node ? 'pointer' : 'default';
           }}
-          onNodeClick={(node: GraphNode | null) => {
-          setClickedNode(node)
-        }}
-      />
+        />
       </div>
 
       {/* Tooltip for Hovered Node */}
@@ -235,72 +191,18 @@ const CustomForceGraph3D: React.FC<CustomForceGraph3DProps> = ({
               zIndex: 1
             }}
           >
-            <h2 style={{ margin: 0, fontSize: "18px" }}>{hoveredNode.name}</h2>{" "}
-            <button
-              className="mt-3 mb-1 relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
-              style={{
-                pointerEvents: "auto", // Make the button clickable
-                cursor: "pointer", // Ensure it has the pointer cursor on hover
-              }}
-            >
-              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
-                Meet Someone!
-              </span>
-            </button>
-            <h3 style={{ margin: "10px 0 5px 0", fontSize: "14px" }}>Notes:</h3>{" "}
+            <h2 style={{ margin: 0, fontSize: "18px"}}>{hoveredNode.name}</h2>{" "}
+            {/* Larger font size */}
+            <h3 style={{ margin: "10px 0 5px 0", fontSize: "14px" }}>
+              Notes:
+            </h3>{" "}
             {/* Heading before notes */}
-            <p className="whitespace-pre-wrap" style={{ margin: 0 }}>
-              {hoveredNode.notes.slice(0, 250)}
-              {hoveredNode.notes.length > 250 && ".."}
-            </p>
+            <p style={{ margin: 0 }}>{hoveredNode.notes}</p>
           </div>
         </>
       )}
-      {clickedNode && !hoveredNode && (
-        <div
-          style={{
-            position: "absolute",
-            left: `20px`, // Move further away from the left
-            top: `30px`, // Move further down
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            color: "white",
-            padding: "10px", // Slightly more padding for better appearance
-            borderRadius: "3px",
-            pointerEvents: "none", // Ensure the tooltip doesn't interfere with interaction
-            maxWidth: "200px", // Limit the width to enable text wrapping
-            whiteSpace: "normal", // Allow text wrapping
-            wordWrap: "break-word", // Ensure long words are wrapped
-          }}
-        >
-          <h2 style={{ margin: 0, fontSize: "18px" }}>{clickedNode.name}</h2>
-          <button
-            className="mt-3 mb-1 relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
-            style={{
-              pointerEvents: "auto", // Make the button clickable
-              cursor: "pointer", // Ensure it has the pointer cursor on hover
-            }}
-            onClick={openModal} // Open the modal on button click
-          >
-            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-            <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
-              Meet Someone!
-            </span>
-          </button>
-          <h3 style={{ margin: "10px 0 5px 0", fontSize: "14px" }}>Notes:</h3>
-          <p className="whitespace-pre-wrap" style={{ margin: 0 }}>
-            {clickedNode.notes.slice(0, 250)}
-            {clickedNode.notes.length > 250 && ".."}
-          </p>
-        </div>
-      )}
-
-      {/* Modal for the clicked node */}
-      <Modal suggestedPeople={suggestedPeople} isOpen={isModalOpen} onClose={closeModal} title="Meet Someone!">
-        <p>Meeting details for {clickedNode?.name}</p>
-      </Modal>
-    </>
-  )
-}
+    </div>
+  );
+};
 
 export default CustomForceGraph3D;
